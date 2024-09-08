@@ -48,7 +48,7 @@ ggplot(puntajes_m, aes(x = Factor1, y = Factor3, label = Modelo)) +
 
 ggplot(puntajes_m, aes(x = Factor1, y = Factor2, color = Factor3)) +
   geom_point(size = 4) +  # Añadir puntos con tamaño específico
-  geom_text(aes(label = Modelo), vjust = -0.5) +  # Añadir etiquetas de marcas
+  geom_text(aes(label = Modelo), vjust = -0.5, size = 2.5) +  # Añadir etiquetas de marcas
   scale_color_gradient(low = "orange", high = "blue")+
   geom_hline(yintercept = 0, linetype = "dotted") +  # Línea punteada en y=0
   geom_vline(xintercept = 0, linetype = "dotted") +  # Línea punteada en x=0
