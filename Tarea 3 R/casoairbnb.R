@@ -32,8 +32,16 @@ docs<-tm_map(docs, stemDocument, language = "en") # fin comandos cleansing
 #mediante los siguientes comandos.
 docs2=DocumentTermMatrix(docs) # cuenta la frecuencia de cada palabra del corpus anterior
 m=as.matrix(docs2) #MATRIZ DE FRECUENCIAS
-TF=apply(m,2,sum)/dim(m)[1]  
+TF=apply(m,2,sum)/dim(m)[1] 
 TF_df=as.data.frame(TF)
+#..............................................................................#
+#pruebas
+sumtf=colSums(TF_df)
+
+TF_norm<-TF_df%>%
+  mutate(TF=TF/sumtf)
+#..............................................................................#
+
 df=apply(m>0,2,mean)
 IDF=1+log10(1/df)
 #------------------------------------------------------------------------------#
