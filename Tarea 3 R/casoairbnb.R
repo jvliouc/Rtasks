@@ -33,6 +33,7 @@ docs<-tm_map(docs, stemDocument, language = "en") # fin comandos cleansing
 docs2=DocumentTermMatrix(docs) # cuenta la frecuencia de cada palabra del corpus anterior
 m=as.matrix(docs2) #MATRIZ DE FRECUENCIAS
 TF=apply(m,2,sum)/dim(m)[1]  
+TF_df=as.data.frame(TF)
 df=apply(m>0,2,mean)
 IDF=1+log10(1/df)
 #------------------------------------------------------------------------------#
@@ -63,7 +64,25 @@ wordcloud(words = palabras2,
           scale = c(4, 0.5),
           colors = brewer.pal(8, "Paired"))
 #------------------------------------------------------------------------------#
+data=data.frame(terms=names(TF),TF,IDF,TFIDF)
+data_ord=data[order(data$TFIDF,decreasing=TRUE),][1:10,]
+data_ord$terms=factor(data_ord$terms,levels=data_ord$terms[order(data_ord$TFIDF,decreasing=TRUE)])
 
+ggplot(data_ord, aes(x = terms, y = TF)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +  # Para que las barras sean horizontales
+  labs(x = "Palabras", y = "TF", title = "Frecuencia de Palabras") +
+  theme_minimal()
+ggplot(data_ord, aes(x = terms, y = IDF)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  coord_flip() +  # Para que las barras sean horizontales
+  labs(x = "Palabras", y = "IDF", title = "Frecuencia de Palabras") +
+  theme_minimal()
+ggplot(data_ord, aes(x = terms, y = TFIDF)) +
+  geom_bar(stat = "identity", fill = "seagreen") +
+  coord_flip() +  # Para que las barras sean horizontales
+  labs(x = "Palabras", y = "TFIDF", title = "Frecuencia de Palabras") +
+  theme_minimal()
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
 #                             Pregunta 2
