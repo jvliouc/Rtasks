@@ -57,6 +57,7 @@ wordcloud(words = palabras1,
           rot.per = 0.35,     # Proporción de palabras que se rotan a 90 grados
           scale = c(4, 0.5),
           colors = brewer.pal(8, "Paired"))
+title(main = "TF", col.main = "Black", font.main = 4)
 #------------------------------------------------------------------------------#
 #grafico TFIDF
 TFIDF=TF*IDF
@@ -71,6 +72,7 @@ wordcloud(words = palabras2,
           rot.per = 0.35,     # Proporción de palabras que se rotan a 90 grados
           scale = c(4, 0.5),
           colors = brewer.pal(8, "Paired"))
+title(main = "TFIDF", col.main = "Black", font.main = 4)
 #------------------------------------------------------------------------------#
 data=data.frame(terms=names(TF),TF,IDF,TFIDF)
 data_ord=data[order(data$TFIDF,decreasing=TRUE),][1:10,]
@@ -79,17 +81,17 @@ data_ord$terms=factor(data_ord$terms,levels=data_ord$terms[order(data_ord$TFIDF,
 ggplot(data_ord, aes(x = terms, y = TF)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +  # Para que las barras sean horizontales
-  labs(x = "Palabras", y = "TF", title = "Frecuencia de Palabras") +
+  labs(x = "Palabras", y = "TF", title = "Análisis TF primeras 10 palabras") +
   theme_minimal()
 ggplot(data_ord, aes(x = terms, y = IDF)) +
   geom_bar(stat = "identity", fill = "orange") +
   coord_flip() +  # Para que las barras sean horizontales
-  labs(x = "Palabras", y = "IDF", title = "Frecuencia de Palabras") +
+  labs(x = "Palabras", y = "IDF", title = "Análisis IDF primeras 10 palabras") +
   theme_minimal()
 ggplot(data_ord, aes(x = terms, y = TFIDF)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   coord_flip() +  # Para que las barras sean horizontales
-  labs(x = "Palabras", y = "TFIDF", title = "Frecuencia de Palabras") +
+  labs(x = "Palabras", y = "TFIDF", title = "Análisis TFIDF primeras 10 palabras") +
   theme_minimal()
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
@@ -108,6 +110,10 @@ ggplot(sentiment_df, aes(x = sentiment)) +
   labs(title = "Distribución de los Puntajes de Sentimiento",
        x = "Puntaje de Sentimiento",
        y = "Frecuencia") +
+  scale_x_continuous(
+    breaks = seq(0, 20, by = 1),
+    labels = function(x) paste0("[", x, ",", x + 1, "[")
+  ) +
   theme_minimal()
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
