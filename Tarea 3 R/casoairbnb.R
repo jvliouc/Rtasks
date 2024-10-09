@@ -74,14 +74,14 @@ wordcloud(words = palabras2,
           colors = brewer.pal(8, "Paired"))
 title(main = "TFIDF", col.main = "Black", font.main = 4)
 #------------------------------------------------------------------------------#
-data=data.frame(terms=names(TF),TF,IDF,TFIDF)
+data=data.frame(terms=names(TF),TF_norm,IDF,TFIDF)
 data_ord=data[order(data$TFIDF,decreasing=TRUE),][1:10,]
 data_ord$terms=factor(data_ord$terms,levels=data_ord$terms[order(data_ord$TFIDF,decreasing=TRUE)])
 
 ggplot(data_ord, aes(x = terms, y = TF)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +  # Para que las barras sean horizontales
-  labs(x = "Palabras", y = "TF", title = "Análisis TF primeras 10 palabras") +
+  labs(x = "Palabras", y = "TF", title = "Análisis TF primeras 10 palabras: Estandarizado") +
   theme_minimal()
 ggplot(data_ord, aes(x = terms, y = IDF)) +
   geom_bar(stat = "identity", fill = "orange") +
