@@ -107,7 +107,7 @@ BIC(modelo)
 AIC(modelo)
 
 
-R2_modelo2 <- 1- modelo$deviance/modelo$null.deviance
+R2_modelo2 <- 1- modelo2$deviance/modelo2$null.deviance
 R2_modelo2
 BIC(modelo2)
 AIC(modelo2)
