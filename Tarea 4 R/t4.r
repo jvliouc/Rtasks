@@ -9,8 +9,9 @@ library(flextable)
 data <- read_delim("Rtasks/Tarea 4 R/Datos Parque de Diversiones.csv", delim = ";", locale = locale(encoding = "Latin1"))
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
-
 ####PREGUNTA1
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 data$Region <- as.factor(data$Region)
 colnames(data)[3]<-"Gasto_Historico"
 colnames(data)[4]<-"Gasto_Mensual"
@@ -114,19 +115,27 @@ AIC(modelo2)
 
 pR2(modelo)[5] #maxima verosimilitud
 
-
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 
 #PREGUNTA 2
 #si el B es 0.4 entonces e**0.4=2 , entonces la chance aumenta x2 dado un aumento en visita 
 #la exponencial del B te da el aumento de chance x la variable
 #la campaña NO debe ser dirigida a los que si o si van a comprar o a los que no compraran (probabilidad muy baja)
 #viendo las regiones Midwest NO compra, asi no que vale la pena hacerle una campaña 
-
-
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
+numeros_lista <- list()
+for (i in 1:11){
+  numeros_lista[[i]] <- exp(modelo2$coefficients[i])
+}
+print(numeros_lista)
 #------------------------------------------------------------------------------#
 #------------------------------------------------------------------------------#
 #PREGUNTA3
 #a la variable region no le ponemos sacar el promedio, asi que lo haremos sin ella 
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 modelo3<-glm(Compra ~ Visitas + Gasto_Mensual + Sat_Precio + 
                Cupon, data, family = "binomial")
 summary(modelo3)
@@ -148,9 +157,12 @@ ggplot(nuevo_data, aes(x = Visitas, y = prediccion)) +
   theme_minimal() 
 
 #grafico: no es lineal 
-
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 ####PREGUNTA 4: 
 #A menor punto de corte voy a tener mas accuracy 
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 data$prob =predict(modelo2, type="response")
 data$pred25=as.numeric(data$prob>0.25)
 t1=table(data$pred25, data$Compra)
@@ -167,18 +179,24 @@ prop.table(t2)
 #¿que es peor, falso negativo o falso positivo?
 
 
-
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 ##PREGUNTA 5
+#------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------#
 pred=prediction(as.numeric(data$prob),data$Compra)
 perf=performance(pred,"auc")
 auc=round(perf@y.values[[1]],digits=3)
 perf=performance(pred,"tpr","fpr")
 
 df=data.frame(x=perf@x.values[[1]],y=perf@y.values[[1]])
-ggplot(df)+aes(x=x,y=y)+geom_line(size=2,color="steelblue")+geom_line(aes(x,x),lty=2)+
-  labs(x="Tasa Falso Positivo",y="Tasa Verdadero Positivo")+lims(x=c(0,1),y=c(0,1))
-
-
+ggplot(df) +
+  aes(x = x, y = y) +
+  geom_line(size = 2, color = "steelblue") +
+  geom_line(aes(x, x), lty = 2) +
+  labs(x = "Tasa Falso Positivo", y = "Tasa Verdadero Positivo") +
+  lims(x = c(0, 1), y = c(0, 1)) +
+  annotate("text", x = 0.7, y = 0.1, label = paste("AUC =", auc), size = 5, color="#64B2DC")
 
 
 #------------------------------------------------------------------------------#
